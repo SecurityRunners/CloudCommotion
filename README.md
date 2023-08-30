@@ -4,6 +4,8 @@
 
 You can talk the talk, but can you walk the walk? Cloud Commotion is intended to purposefully cause commotion through vulnerable or concerning infrastructure in order to test your alerting systems or lack thereof. It uses terraform to create fictitious scenarios to assess coverage of your security posture allowing you to create, deploy, and destroy the infrastructure with ease. The only question you will need answering is how long will it take for anyone to notice?
 
+<img src=".assets/cli.png" align="center" style="border:25px solid transparent;">
+
 ## Purpose
 
 There is no shortage of breaches as it relates to misconfigured, vulnerable, and overly permissive infrastructure within cloud environments. Cloud Commotion simulates what occurs frequently within the industry to help better prepare you for incidents. We frequently improve on our monitoring systems while seldomly testing the effectiveness and coverage of those systems. This tool will help you setup frequent cadence to do exactly that. 
@@ -29,35 +31,33 @@ The infrastructure this tool creates to cause commotion is located within `terra
 
 ### AWS
 
-| Title                      | Description                                                        | Terraform Module |
-|----------------------------|--------------------------------------------------------------------|------------------|
-| Public S3 Bucket(Get)      | Creates a public bucket with GetObject operations                  | Value 3          |
-| Public S3 Bucket(Get/List) | Creates a public bucket with GetObject and ListBucket operations   | Value 6          |
-| Public S3 Bucket(Write)    | Creates a public bucket with PutObject operations                  | Value 6          |
-| Public S3 Object(ACL)      | Creates a private bucket with a public object                      | Value 6          |
-| Public SQS Queue           | Creates a publicly accessible queue                                |                  |
-| Public SNS Topic           | Creates a publicly accessible SNS topic                            |                  |
-| Public Secrets Manager     | Creates a publicly acccessible secret                              |                  |
-| Public Lambda Invocation   | Creates a lambda function that can be invoked by anyone            |                  |
-| Public Lambda Layer        | Creates a labmda layer that is publicly accessible                 |                  |
-| Public Lambda Endpoint     | Creates a publicly accessible endpoint for lambda                  |                  |
-| Public Glue Policy         | Makes glue resources publicly accessible                           |                  |
-| Public Glacier Vault       | Creates a publicly accessible Glacier backup vault                 |                  |
-| Public EFS                 | Creates a publicly accessible EFS share                            |                  |
-| Public ECR Gallery         | Creates a publicly accessible ECR Gallery registry                 |                  |
-| Public ECR                 | Creates a private registry thats publicly accessible               |                  |
-| Public AWS Backup Vault    | Creates a publicly accessible AWS Backup Vault                     |                  |
-| Public EBS Snapshot        | Creates a public EBS snapshot                                      |                  |
-| Public AMI                 | Creates a public server image                                      |                  |
-| IAM Role OIDC Takeover     | Creates a IAM role that can be taken over by any GitHub Action     |                  |
-| S3 Subdomain Takeover      | Creates a Route53 record that can be taken over through S3         |                  |
-| EIP Takeover               | Creates a Route53 record that can be taken over through EC2        |                  |
-| Third Party Takeover       | Creates a Route53 record that can be taken over through SaaS       |                  |
-| Second Order Takeover      | Creates a static site where a script tag can be taken over         |                  |
-| ASG RCE Takeover           | Creates a ASG that can be compromised through S3 takeover          |                  |
-| Public Jenkins Instance    | Creates a publicly accessible Jenkins instance in your account     |                  |
-| RDS 
-
+| Title                      | Description                                                        |
+|----------------------------|--------------------------------------------------------------------|
+| Public S3 Bucket(Get)      | Creates a public bucket with GetObject operations                  |
+| Public S3 Bucket(Get/List) | Creates a public bucket with GetObject and ListBucket operations   |
+| Public S3 Bucket(Write)    | Creates a public bucket with PutObject operations                  |
+| Public S3 Object(ACL)      | Creates a private bucket with a public object                      |
+| Public SQS Queue           | Creates a publicly accessible queue                                |
+| Public SNS Topic           | Creates a publicly accessible SNS topic                            |
+| Public Secrets Manager     | Creates a publicly acccessible secret                              |
+| Public Lambda Invocation   | Creates a lambda function that can be invoked by anyone            |
+| Public Lambda Layer        | Creates a labmda layer that is publicly accessible                 |
+| Public Lambda Endpoint     | Creates a publicly accessible endpoint for lambda                  |
+| Public Glue Policy         | Makes glue resources publicly accessible                           |
+| Public Glacier Vault       | Creates a publicly accessible Glacier backup vault                 |
+| Public EFS                 | Creates a publicly accessible EFS share                            |
+| Public ECR Gallery         | Creates a publicly accessible ECR Gallery registry                 |
+| Public ECR                 | Creates a private registry thats publicly accessible               |
+| Public AWS Backup Vault    | Creates a publicly accessible AWS Backup Vault                     |
+| Public EBS Snapshot        | Creates a public EBS snapshot                                      |
+| Public AMI                 | Creates a public server image                                      |
+| IAM Role OIDC Takeover     | Creates a IAM role that can be taken over by any GitHub Action     |
+| S3 Subdomain Takeover      | Creates a Route53 record that can be taken over through S3         |
+| EIP Takeover               | Creates a Route53 record that can be taken over through EC2        |
+| Third Party Takeover       | Creates a Route53 record that can be taken over through SaaS       |
+| Second Order Takeover      | Creates a static site where a script tag can be taken over         |
+| ASG RCE Takeover           | Creates a ASG that can be compromised through S3 takeover          |
+| Public Jenkins Instance    | Creates a publicly accessible Jenkins instance in your account     |
 
 ### Scenarios
 
