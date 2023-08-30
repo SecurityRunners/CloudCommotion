@@ -1,13 +1,20 @@
 # Cloud Commotion
 
+<img src=".assets/logo.png" width="400" height="300" align="right">
+
 You can talk the talk, but can you walk the walk? Cloud Commotion is intended to purposefully cause commotion through vulnerable or concerning infrastructure in order to test your alerting systems or lack thereof. It uses terraform to create fictitious scenarios to assess coverage of your security posture allowing you to create, deploy, and destroy the infrastructure with ease. The only question you will need answering is how long will it take for anyone to notice?
 
 ## Purpose
 
 There is no shortage of breaches as it relates to misconfigured, vulnerable, and overly permissive infrastructure within cloud environments. Cloud Commotion simulates what occurs frequently within the industry to help better prepare you for incidents. We frequently improve on our monitoring systems while seldomly testing the effectiveness and coverage of those systems. This tool will help you setup frequent cadence to do exactly that. 
 
-- Simulate an exposed Jenkins box that lead to ["No Fly List" breach by CommuteAir](https://maia.crimew.gay/posts/how-to-hack-an-airline/)
+### Published Incidents
+
+The scenarios built within the tool are inspired by actual events that occur regularly within the industry. The majority of which go unheard of and stay within the confounds of an organization. Here are just a few publicly available news stories demonstrating how one could use this tool to simulate events that have occurred in the industry.
+
+- Exposed Jenkins box that lead to ["No Fly List" breach by CommuteAir](https://maia.crimew.gay/posts/how-to-hack-an-airline/)
 - Publicly writable S3 bucket for javascript assets leading to [crypto mining on LA Times website](https://www.theregister.com/2018/02/22/la_times_amazon_aws_s3/)
+- Publicly [exposed elasticsearch cluster at Amazon's Prime Video](https://techcrunch.com/2022/10/27/amazon-prime-video-server-exposed/)
 - Exfiltrated cross account RDS snapshots leading to exposure of [Imperva's customer records](https://krebsonsecurity.com/2019/08/cybersecurity-firm-imperva-discloses-breach/)
 - Browserstack backdoor IAM user to [BrowserStack compromised email list](https://web.archive.org/web/20141220062119/http://www.browserstack.com:80/attack-and-downtime-on-9-November)
 - Exposed RDS instance lead to the [Drizly breach of 2 million user records](https://techcrunch.com/2020/07/28/drizly-data-breach/)
@@ -124,40 +131,6 @@ The infrastructure within `terraform/` are intended to simulate scenarios that a
     - Disable Eventbridge notifications(TODO)
     - Disable Security Services(TODO)
     - Ransomware for S3(TODO)
-
-## Modules
-
-- terraform/exposed_services/s3/public_list_get
-- terraform/exposed_services/s3/public_get
-- terraform/exposed_services/s3/public_object_acl
-- terraform/exposed_services/sqs
-- terraform/exposed_services/aws_lambda/invoke
-- terraform/exposed_services/aws_iam_role
-- terraform/exposed_services/aws_lambda/layer
-- terraform/exposed_services/aws_ecr/aws_ecr_public_gallaery
-- terraform/exposed_services/aws_ecr/aws_ecr_public
-- terraform/exposed_services/aws_kms_key
-- terraform/exposed_services/aws_backup_vault
-- terraform/exposed_services/aws_efs
-- terraform/exposed_services/aws_glacier
-- terraform/exposed_services/aws_secrets_manager
-- terraform/exposed_services/aws_glue
-- terraform/exposed_services/aws_sns_topic
-- terraform/exposed_assets/ec2/jenkins
-- terraform/exposed_assets/ec2/ebs
-- terraform/exposed_assets/ec2/ami
-- terraform/backdoored_entities/iam_user/administrative_user
-- terraform/backdoored_entities/iam_user/privesc_user
-- terraform/backdoored_entities/iam_role/external_administrator
-- terraform/backdoored_entities/iam_role/external_privesc
-- terraform/backdoored_entities/ec2_ami
-- terraform/backdoored_entities/ebs_volume
-- terraform/misconfigurations/takeovers/s3_takeover
-- terraform/misconfigurations/takeovers/eip_takeover
-- terraform/misconfigurations/takeovers/thirdparty_takeover
-- terraform/misconfigurations/takeovers/second_order_takeover
-- terraform/misconfigurations/iam_role/oidc
-
 
 ### Variables
 
