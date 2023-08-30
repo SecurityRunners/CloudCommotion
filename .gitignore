@@ -1,0 +1,10 @@
+CloudCommotion
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfvars
+.terraform.lock.hcl
+*.zip
+.terraform.tfstate.lock.info
