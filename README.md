@@ -58,6 +58,8 @@ The infrastructure this tool creates to cause commotion is located within `terra
 
 #### Backdoored Assets
 
+| Title                          | Description                                                        |
+|--------------------------------|--------------------------------------------------------------------|
 | Cross Account EBS Volume       | Creates a EBS Volume shared with another AWS account               |
 | Cross Account AMI              | Creates a AMI shared with another AWS account                      |
 | Cross Account Role(Admin)      | Creates an administrative IAM role cross account                   |
@@ -68,6 +70,8 @@ The infrastructure this tool creates to cause commotion is located within `terra
 
 #### Misconfigurations
 
+| Title                      | Description                                                        |
+|----------------------------|--------------------------------------------------------------------|
 | IAM Role OIDC Takeover     | Creates a IAM role that can be taken over by any GitHub Action     |
 | S3 Subdomain Takeover      | Creates a Route53 record that can be taken over through S3         |
 | EIP Takeover               | Creates a Route53 record that can be taken over through EC2        |
@@ -77,6 +81,8 @@ The infrastructure this tool creates to cause commotion is located within `terra
 
 #### Exposed Assets - TODO
 
+| Title                      | Description                                                        |
+|----------------------------|--------------------------------------------------------------------|
 | Public Jenkins Instance    | Creates a publicly accessible Jenkins instance                     |
 | Public Opensearch Instance | Creates a publicly accessible OpenSearch(ElasticSearch) instance   |
 | Public SSH Instance        | Creates a publicly accessible SSH instance                         |
