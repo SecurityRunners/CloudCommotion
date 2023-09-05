@@ -10,7 +10,7 @@ You can talk the talk, but can you walk the walk? Cloud Commotion is intended to
 
 There is no shortage of breaches as it relates to misconfigured, vulnerable, and overly permissive infrastructure within cloud environments. Cloud Commotion simulates what occurs frequently within the industry to help better prepare you for incidents. We frequently improve on our monitoring systems while seldomly testing the effectiveness and coverage of those systems. This tool intends to create vulnerable, misconfigured, and overly permissive services for a wide variety of scenarios to identify gaps, alerting system for coverage, alert preparedness, and how your team would respond in the event of an incident.
 
-### Published Incidents
+### Inspiration
 
 The scenarios built within the tool are inspired by actual events that occur regularly within the industry. The majority of which go unheard of and stay within the confounds of an organization. Here are just a few publicly available news stories demonstrating how scenarios in Cloud Commotion have occurred within the industry.
 
