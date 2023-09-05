@@ -88,72 +88,32 @@ The infrastructure this tool creates to cause commotion is located within `terra
 | Public Opensearch Instance | Creates a publicly accessible OpenSearch(ElasticSearch) instance   |
 | Public SSH Instance        | Creates a publicly accessible SSH instance                         |
 | Public AWS Redshift        | Creates a publicly accessible Redshift cluster                     |
-| Public RDS(TODO)           | Creates a publicly accessible RDS cluster                          |
-| Public Lightsail(TODO)     | Creates a publicly accessible Lightsail instance                   |
-| Public EKS Cluster(TODO)   | Creates a publicly accessible EKS Cluster                          |
-| Public ECS Cluster(TODO)   | Creates a publicly accessible ECS Cluster                          |
+| Public RDS                 | Creates a publicly accessible RDS cluster                          |
+| Public Lightsail           | Creates a publicly accessible Lightsail instance                   |
+| Public EKS Cluster         | Creates a publicly accessible EKS Cluster                          |
+| Public ECS Cluster         | Creates a publicly accessible ECS Cluster                          |
 | Public Load Balancer(CLB)  | Creates a publicly accessible Classic Load Balancer                |
 | Public Load Balancer(NLB)  | Creates a publicly accessible Network Load Balancer                |
 | Public Load Balancer(ALB)  | Creates a publicly accessible Application Load Balancer            |
+| Public AWS API Gateway     | Creates a publicly accessible API Gateway
 
-### Scenarios
-
-The infrastructure within `terraform/` are intended to simulate scenarios that are likely to trigger alerting systems while also helping you identify gaps. The scenarios are essentially a list of table top exercises you can perform at will and create safe fictitious holes in your architecture.
+#### Ideas
 
 - Backdoors
-    - Cross Account Administrative Role
-    - Cross Account with Priviledge Escalation Role
-    - IAM User with Administrative Permissions with Console Sign In
-    - IAM User with Priviledge Escalation with Console Sign In
     - Exposed API Gateway with Administrative Functionality(TODO)
     - Cross Account ECR Policy with Ability to Overwrite Image(TODO)
     - Cross Account Lambda Function with Administrative Permissions(TODO)
-    - Variety of Scenarios for Cross Account Administrative Functions(TODO)
     - Exfiltrating Service Snapshots(TODO)
         - AMI
         - RDS(TODO)
         - Redshift(TODO)
 - Exposed Assets
-    - Exposed fictitious EC2 Instance(TODO)
-        - Exposed Jenkins(TODO)
-        - Exposed custom flag(TODO)
-    - Exposed API Gateway(TODO)
     - Exposed Unauthenticated Kubernetes API Actions(TODO)
     - Exposed ECS Cluster(TODO)
-    - Exposed Lightsail Instance(TODO)
     - S3 CloudFront static site sensitive file(TODO)
-    - Public Snapshots
-        - Public EBS Snapshot
-        - Public AMI
-        - ?
 - Exposed Services
-    - Variety of Public S3 Bucket/Object scenarios
-        - Public Bucket Policy (List + Get)
-        - Public Bucket Policy (Get)
-        - Public Object ACL
-    - Public SQS Queue
-    - Public Lambda
-        - Lambda Layer
-        - Invoke
-        - Endpoint(TODO)
-    - Public Elastic Docker/Container Registry
-        - Public Registry
-        - Private Registry made public
-    - Public KMS Key
-    - Public AWS Backup
-    - Public EFS(NFS)
-    - Public Glacier
-    - Public IAM Role
-    - Public Secrets Manager
-    - Public CloudWatch Logs(?)
-    - Public EventBridge(TODO)
-    - Public MediaStore(TODO)
     - Public Elasticsearch/Opensearch(TODO)
-    - Public Glue
-    - Public SNS(TODO)
-    - Public SES(TODO)
 - Misconfigurations
-    - RCE S3 Takeover Instance Metadata(TODO)
     - Plaintext Secrets in a variety of locations(TODO)
         - Instance metadata
         - Environment variables
@@ -169,6 +129,10 @@ The infrastructure within `terraform/` are intended to simulate scenarios that a
     - Disable Security Services(TODO)
     - Ransomware for S3(TODO)
 
+## Usage
+
+Installation/Usage steps go here.
+
 ### Variables
 
 These are vaiables that are used across all the scenarios to account for global namespaces, custom flags to alert the responders, and tags to accomodate for tagging strategies. 
@@ -178,66 +142,20 @@ These are vaiables that are used across all the scenarios to account for global 
 - Tags is an optional variable, such as `Creator = cloudcommotion` for `tags` as type `map(string)`, to ensure your asset does not get caught up in unrelated tagging enforcement infrastructure
 - Region, such as the default `us-east-1` for `region` variable, to allow you to switch up regions
 
-#### Optional Variables
+## Contributing
 
-- Custom sensitive file, for example `users_table_20230910.csv` for `custom_sensitive_file`, for S3 related scenarios
+To contribute to the source code or documentation please feel free to submit an issue, reach out directly, or create a pull request. All requests are appreciated!
 
-### Validation
+### Terraform
+
+Feel free to contribute with any official provider as well as any provider that may be widely adopted. Prior to committing, please generate the readme file as well as ensure proper formatting.
 
 - Create documentation for the module `terraform-docs markdown table . --output-file README.md`
 - Format the terraform `terraform fmt .`
+- Lint the terraform `tflint`
 
+# Credits
 
-## TODO
-
-- Determine flags
-- Destroy without variables?
-- Get variables from config and if not then flags? `config.GetConfig().Variables.ResourceName`
-- Store variables for later destory somehow?
-
-### Configuration
-
-- Default configuration requires no parameters defaults to easy + random pet name
-- Required flag is just playbook/module/difficulty
-- Recommended flags are region, resource name(s), sensitive message, 
-
-
-
-### Configuration File
-
-- Provider
-    - Might be important later at least for random region selection for multi-cloud
-- Region
-    - Random or a valid region
-- Module
-    - Name
-        - Name of the terraform module to execute
-    - terraform_dir
-        - Directory of the terraform to execute
-    - Variables
-        - Maybe?
-- Variables
-    - resource_name
-        - Name of the resource as must be unique in some global namespaces(s3) as well as more convincing
-    - sensitive_content
-        - Allows for a flag to be embedded within the file that might be useful, maybe should not be in the module itself but in code?
-    - tags
-        - Tags for the created resource
-
-### Flags
-
-- Region
-- Terraform Module
-- Config file
-- Variables - If this is a flag destroying might be a bit difficult unless storing a file?
-    - Flag
-    - Resource name
-
-
-https://mystic0x1.github.io/posts/methods-to-backdoor-an-aws-account/
-https://dagrz.com/writing/aws-security/getting-into-aws-security-research/
-
-.terraform/
-.terraform.lock.hcl
-terraform.tfstate
-terraform.tfstate.backup
+- [breaches.cloud](https://breaches.cloud)
+- [Backdoor an AWS Account](https://mystic0x1.github.io/posts/methods-to-backdoor-an-aws-account/)
+- [Getting Into AWS Security Research](https://dagrz.com/writing/aws-security/getting-into-aws-security-research/)
