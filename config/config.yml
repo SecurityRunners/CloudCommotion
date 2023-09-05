@@ -6,12 +6,12 @@ region: us-east-1 # Can select any valid region or `random` to randomize regions
 
 # List of playbooks to run
 module:
-  - name: Exposed Jenkins Box
-    terraform_dir: terraform/exposed_assets/aws_ec2/jenkins
+  - name: Exposed SSH Instance
+    terraform_dir: terraform/exposed_assets/aws_ec2/ssh
     variables:
       vpc_id: vpc-0a7142ba4759c0ef8
       subnet_id: subnet-0f4cb14acd59dc131
-      allowed_ip: 172.125.113.167/32
+      allowed_ip: 108.193.64.82/32
       key_pair: m2
 variables:
   resource_name: "securityrunners-images-prod" # Convincing resource name for all resources to be created as

@@ -8,11 +8,11 @@ You can talk the talk, but can you walk the walk? Cloud Commotion is intended to
 
 ## Purpose
 
-There is no shortage of breaches as it relates to misconfigured, vulnerable, and overly permissive infrastructure within cloud environments. Cloud Commotion simulates what occurs frequently within the industry to help better prepare you for incidents. We frequently improve on our monitoring systems while seldomly testing the effectiveness and coverage of those systems. This tool will help you setup frequent cadence to do exactly that. 
+There is no shortage of breaches as it relates to misconfigured, vulnerable, and overly permissive infrastructure within cloud environments. Cloud Commotion simulates what occurs frequently within the industry to help better prepare you for incidents. We frequently improve on our monitoring systems while seldomly testing the effectiveness and coverage of those systems. This tool intends to create vulnerable, misconfigured, and overly permissive services for a wide variety of scenarios to identify gaps, alerting system for coverage, alert preparedness, and how your team would respond in the event of an incident.
 
 ### Published Incidents
 
-The scenarios built within the tool are inspired by actual events that occur regularly within the industry. The majority of which go unheard of and stay within the confounds of an organization. Here are just a few publicly available news stories demonstrating how one could use this tool to simulate events that have occurred in the industry.
+The scenarios built within the tool are inspired by actual events that occur regularly within the industry. The majority of which go unheard of and stay within the confounds of an organization. Here are just a few publicly available news stories demonstrating how scenarios in Cloud Commotion have occurred within the industry.
 
 - Exposed Jenkins box that lead to ["No Fly List" breach by CommuteAir](https://maia.crimew.gay/posts/how-to-hack-an-airline/)
 - Publicly writable S3 bucket for javascript assets leading to [crypto mining on LA Times website](https://www.theregister.com/2018/02/22/la_times_amazon_aws_s3/)
@@ -30,6 +30,8 @@ Cloud Commotion leverages [terraform-exec](https://github.com/hashicorp/terrafor
 The infrastructure this tool creates to cause commotion is located within `terraform/` directory to be deployed based upon your configuration. While also allowing you to deploy with your own IaC tooling, using this tool allows you to track and manage the infrastructure associated to it's use. 
 
 ### AWS
+
+#### Exposed Services
 
 | Title                      | Description                                                        |
 |----------------------------|--------------------------------------------------------------------|
@@ -51,13 +53,41 @@ The infrastructure this tool creates to cause commotion is located within `terra
 | Public AWS Backup Vault    | Creates a publicly accessible AWS Backup Vault                     |
 | Public EBS Snapshot        | Creates a public EBS snapshot                                      |
 | Public AMI                 | Creates a public server image                                      |
+| Public IAM Role            | Creates an IAM role that can be assumed from any AWS account       |
+| Public KMS Key             | Creates a public KMS key                                           |
+
+#### Backdoored Assets
+
+| Cross Account EBS Volume       | Creates a EBS Volume shared with another AWS account               |
+| Cross Account AMI              | Creates a AMI shared with another AWS account                      |
+| Cross Account Role(Admin)      | Creates an administrative IAM role cross account                   |
+| Cross Account Role(PrivEsc)    | Creates a privesc IAM role cross account                           |
+| IAM User(Console Login)        | Creates an administrative IAM user with console sign in            |
+| IAM User(PrivEsc)              | Creates an IAM user vulnerable to priviledge escalation            |
+
+
+#### Misconfigurations
+
 | IAM Role OIDC Takeover     | Creates a IAM role that can be taken over by any GitHub Action     |
 | S3 Subdomain Takeover      | Creates a Route53 record that can be taken over through S3         |
 | EIP Takeover               | Creates a Route53 record that can be taken over through EC2        |
 | Third Party Takeover       | Creates a Route53 record that can be taken over through SaaS       |
 | Second Order Takeover      | Creates a static site where a script tag can be taken over         |
 | ASG RCE Takeover           | Creates a ASG that can be compromised through S3 takeover          |
-| Public Jenkins Instance    | Creates a publicly accessible Jenkins instance in your account     |
+
+#### Exposed Assets - TODO
+
+| Public Jenkins Instance    | Creates a publicly accessible Jenkins instance                     |
+| Public Opensearch Instance | Creates a publicly accessible OpenSearch(ElasticSearch) instance   |
+| Public SSH Instance        | Creates a publicly accessible SSH instance                         |
+| Public AWS Redshift        | Creates a publicly accessible Redshift cluster                     |
+| Public RDS(TODO)           | Creates a publicly accessible RDS cluster                          |
+| Public Lightsail(TODO)     | Creates a publicly accessible Lightsail instance                   |
+| Public EKS Cluster(TODO)   | Creates a publicly accessible EKS Cluster                          |
+| Public ECS Cluster(TODO)   | Creates a publicly accessible ECS Cluster                          |
+| Public Load Balancer(CLB)  | Creates a publicly accessible Classic Load Balancer                |
+| Public Load Balancer(NLB)  | Creates a publicly accessible Network Load Balancer                |
+| Public Load Balancer(ALB)  | Creates a publicly accessible Application Load Balancer            |
 
 ### Scenarios
 
