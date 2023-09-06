@@ -21,7 +21,7 @@ resource "aws_redshift_cluster" "cluster" {
 
 resource "aws_redshift_subnet_group" "sgroup" {
   name       = var.resource_name
-  subnet_ids = local.public_subnets[0]
+  subnet_ids = element(local.public_subnets, 0)
 
   tags = var.tags
 }
