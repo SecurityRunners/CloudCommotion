@@ -19,7 +19,7 @@ data "aws_ami" "al2" {
 resource "aws_instance" "ssh" {
   ami           = data.aws_ami.al2.id
   instance_type = var.instance_type
-  subnet_id     = var.subnet_id
+  subnet_id     = element(local.public_subnets, 0)
   key_name      = var.key_pair
 
   security_groups      = [aws_security_group.ssh.id]

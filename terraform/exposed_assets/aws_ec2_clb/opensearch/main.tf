@@ -4,22 +4,70 @@ provider "aws" {
 
 data "aws_ami" "al2" {
   most_recent = true
-
   filter {
     name   = "name"
     values = ["amzn2-ami-hvm-2.0.*-x86_64-gp2"]
   }
-
   filter {
     name   = "owner-alias"
     values = ["amazon"]
   }
 }
 
+# Classic Load Balancer resources
+resource "aws_elb" "opensearch" {
+  name            = var.resource_name
+  security_groups = [aws_security_group.opensearch_clb.id]
+  subnets         = local.public_subnets
+  internal        = false
+
+  listener {
+    instance_port     = 9200
+    instance_protocol = "tcp"
+    lb_port           = 9200
+    lb_protocol       = "tcp"
+  }
+
+  tags = var.tags
+}
+
+# Create a health check
+resource "aws_elb_attachment" "opensearch" {
+  elb      = aws_elb.opensearch.id
+  instance = aws_instance.opensearch.id
+}
+
+# Security Group for Classic Load Balancer
+resource "aws_security_group" "opensearch_clb" {
+  name        = "${var.resource_name}_clb"
+  description = var.sensitive_content
+  vpc_id      = var.vpc_id
+  tags        = var.tags
+}
+
+resource "aws_security_group_rule" "opensearch_clb_ingress" {
+  type              = "ingress"
+  from_port         = 9200
+  to_port           = 9200
+  protocol          = "tcp"
+  cidr_blocks       = [var.allowed_ip]
+  security_group_id = aws_security_group.opensearch_clb.id
+}
+
+resource "aws_security_group_rule" "opensearch_clb_egress" {
+  type      = "egress"
+  from_port = 9200
+  to_port   = 9200
+  protocol  = "tcp"
+
+  source_security_group_id = aws_security_group.opensearch.id
+  security_group_id        = aws_security_group.opensearch_clb.id
+}
+
 resource "aws_instance" "opensearch" {
   ami           = data.aws_ami.al2.id
   instance_type = var.instance_type
-  subnet_id     = element(local.public_subnets, 0)
+  subnet_id     = element(local.private_subnets, 0)
   key_name      = var.key_pair
 
   security_groups      = [aws_security_group.opensearch.id]
@@ -71,6 +119,7 @@ resource "aws_iam_instance_profile" "ssm_profile" {
   role = aws_iam_role.ssm_role.name
 }
 
+# Security group for opensearch
 resource "aws_security_group" "opensearch" {
   name        = var.resource_name
   description = var.sensitive_content
@@ -82,21 +131,12 @@ resource "aws_security_group" "opensearch" {
 
 # Allow inbound traffic
 resource "aws_security_group_rule" "opensearch" {
-  type              = "ingress"
-  from_port         = 9200
-  to_port           = 9200
-  protocol          = "tcp"
-  cidr_blocks       = [var.allowed_ip]
-  security_group_id = aws_security_group.opensearch.id
-}
-
-resource "aws_security_group_rule" "ssh" {
-  type              = "ingress"
-  from_port         = 22
-  to_port           = 22
-  protocol          = "tcp"
-  cidr_blocks       = [var.allowed_ip]
-  security_group_id = aws_security_group.opensearch.id
+  type                     = "ingress"
+  from_port                = 9200
+  to_port                  = 9200
+  protocol                 = "tcp"
+  source_security_group_id = aws_security_group.opensearch_clb.id
+  security_group_id        = aws_security_group.opensearch.id
 }
 
 # Allow outbound traffic

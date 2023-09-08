@@ -24,24 +24,12 @@ variable "tags" {
 }
 
 # Custom variables
-variable "allowed_ip" {
-  description = "List of IP addresses to allow access to the box"
-  type        = string
-  default     = "0.0.0.0/0"
-}
-
-variable "vpc_id" {
-  description = "The VPC ID to launch the instance in"
+variable "parent_domain" {
+  description = "The parent domain name."
   type        = string
 }
 
-variable "instance_type" {
-  description = "The type of instance to start"
-  type        = string
-  default     = "t3.micro"
-}
-
-variable "key_pair" {
-  description = "The key pair to use for SSH access"
+variable "parent_zone_id" {
+  description = "The Route53 Zone ID for the parent domain."
   type        = string
 }

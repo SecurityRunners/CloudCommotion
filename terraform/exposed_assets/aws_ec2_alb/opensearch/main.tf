@@ -16,10 +16,84 @@ data "aws_ami" "al2" {
   }
 }
 
+resource "aws_security_group" "opensearch_alb" {
+  name        = "${var.resource_name}_alb"
+  description = var.sensitive_content
+
+  vpc_id = var.vpc_id
+
+  tags = var.tags
+}
+
+resource "aws_security_group_rule" "opensearch_alb_ingress" {
+  type              = "ingress"
+  from_port         = 9200
+  to_port           = 9200
+  protocol          = "tcp"
+  cidr_blocks       = [var.allowed_ip]
+  security_group_id = aws_security_group.opensearch_alb.id
+}
+
+resource "aws_security_group_rule" "opensearch_alb_egress" {
+  type      = "egress"
+  from_port = 9200
+  to_port   = 9200
+  protocol  = "tcp"
+
+  security_group_id        = aws_security_group.opensearch_alb.id
+  source_security_group_id = aws_security_group.opensearch.id
+}
+
+resource "aws_lb" "opensearch" {
+  name               = var.resource_name
+  internal           = false
+  load_balancer_type = "application"
+  security_groups    = [aws_security_group.opensearch_alb.id]
+  subnets            = local.public_subnets
+
+  enable_deletion_protection = false
+
+  tags = var.tags
+}
+
+resource "aws_lb_listener" "opensearch" {
+  load_balancer_arn = aws_lb.opensearch.arn
+  port              = "9200"
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.opensearch.arn
+  }
+}
+
+resource "aws_lb_target_group" "opensearch" {
+  name     = "${var.resource_name}-tg"
+  port     = 9200
+  protocol = "HTTPS"
+  vpc_id   = var.vpc_id
+
+  health_check {
+    enabled  = true
+    port     = "9200"
+    protocol = "HTTPS"
+    path     = "/"
+    matcher  = "401"
+  }
+
+  tags = var.tags
+}
+
+resource "aws_lb_target_group_attachment" "opensearch" {
+  target_group_arn = aws_lb_target_group.opensearch.arn
+  target_id        = aws_instance.opensearch.id
+  port             = 9200
+}
+
 resource "aws_instance" "opensearch" {
   ami           = data.aws_ami.al2.id
   instance_type = var.instance_type
-  subnet_id     = element(local.public_subnets, 0)
+  subnet_id     = element(local.private_subnets, 0)
   key_name      = var.key_pair
 
   security_groups      = [aws_security_group.opensearch.id]
@@ -71,6 +145,7 @@ resource "aws_iam_instance_profile" "ssm_profile" {
   role = aws_iam_role.ssm_role.name
 }
 
+# Security group for opensearch
 resource "aws_security_group" "opensearch" {
   name        = var.resource_name
   description = var.sensitive_content
@@ -82,21 +157,12 @@ resource "aws_security_group" "opensearch" {
 
 # Allow inbound traffic
 resource "aws_security_group_rule" "opensearch" {
-  type              = "ingress"
-  from_port         = 9200
-  to_port           = 9200
-  protocol          = "tcp"
-  cidr_blocks       = [var.allowed_ip]
-  security_group_id = aws_security_group.opensearch.id
-}
-
-resource "aws_security_group_rule" "ssh" {
-  type              = "ingress"
-  from_port         = 22
-  to_port           = 22
-  protocol          = "tcp"
-  cidr_blocks       = [var.allowed_ip]
-  security_group_id = aws_security_group.opensearch.id
+  type                     = "ingress"
+  from_port                = 9200
+  to_port                  = 9200
+  protocol                 = "tcp"
+  source_security_group_id = aws_security_group.opensearch_alb.id
+  security_group_id        = aws_security_group.opensearch.id
 }
 
 # Allow outbound traffic
