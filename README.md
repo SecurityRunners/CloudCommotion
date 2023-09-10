@@ -56,6 +56,7 @@ The infrastructure this tool creates to cause commotion is located within `terra
 | Public AMI                 | Creates a public server image                                      |
 | Public IAM Role            | Creates an IAM role that can be assumed from any AWS account       |
 | Public KMS Key             | Creates a public KMS key                                           |
+| Public OpenSearch          | Creates a public AWS OpenSearch/ElasticSearch cluster              |
 
 #### Backdoored Assets
 
@@ -79,6 +80,7 @@ The infrastructure this tool creates to cause commotion is located within `terra
 | Third Party Takeover       | Creates a Route53 record that can be taken over through SaaS       |
 | Second Order Takeover      | Creates a static site where a script tag can be taken over         |
 | ASG RCE Takeover           | Creates a ASG that can be compromised through S3 takeover          |
+| Delegation Takeover        | Creates and deletes a delegated Route53 hosted zone delegated      |
 
 #### Exposed Assets - TODO
 
