@@ -92,12 +92,12 @@ The infrastructure this tool creates to cause commotion is located within `terra
 | Public AWS Redshift        | Creates a publicly accessible Redshift cluster                     |
 | Public RDS                 | Creates a publicly accessible RDS cluster                          |
 | Public Lightsail           | Creates a publicly accessible Lightsail instance                   |
-<!-- | Public EKS Cluster         | Creates a publicly accessible EKS Cluster                          |
-| Public ECS Cluster         | Creates a publicly accessible ECS Cluster                          | -->
 | Public Load Balancer(CLB)  | Creates a publicly accessible Classic Load Balancer                |
 | Public Load Balancer(NLB)  | Creates a publicly accessible Network Load Balancer                |
 | Public Load Balancer(ALB)  | Creates a publicly accessible Application Load Balancer            |
 | Public AWS API Gateway     | Creates a publicly accessible API Gateway                          |
+<!-- | Public EKS Cluster         | Creates a publicly accessible EKS Cluster                          |
+| Public ECS Cluster         | Creates a publicly accessible ECS Cluster                          | -->
 
 ## Google Cloud
 
