@@ -97,7 +97,7 @@ The infrastructure this tool creates to cause commotion is located within `terra
 | Public Load Balancer(CLB)  | Creates a publicly accessible Classic Load Balancer                |
 | Public Load Balancer(NLB)  | Creates a publicly accessible Network Load Balancer                |
 | Public Load Balancer(ALB)  | Creates a publicly accessible Application Load Balancer            |
-| Public AWS API Gateway     | Creates a publicly accessible API Gateway
+| Public AWS API Gateway     | Creates a publicly accessible API Gateway                          |
 
 ## Google Cloud
 
@@ -108,7 +108,6 @@ The infrastructure this tool creates to cause commotion is located within `terra
 | Public Storage Bucket(Get)      | Creates a public bucket for get operations                         |
 | Public Storage Bucket(Get/List) | Creates a public bucket get and list operations                    |
 | Public S3 Bucket(Get Object)    | Creates a public bucket a single object being public               |
-
 
 #### Ideas
 
