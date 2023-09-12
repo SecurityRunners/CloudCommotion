@@ -13,6 +13,8 @@ resource "google_storage_bucket" "public_all_objects" {
     response_header = ["Content-Type"]
     max_age_seconds = 3600
   }
+
+  labels = var.tags
 }
 
 resource "google_storage_bucket_iam_binding" "public_all_objects_and_listable_bucket_acl" {

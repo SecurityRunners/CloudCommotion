@@ -37,6 +37,8 @@ resource "google_storage_bucket" "public_single_object" {
     response_header = ["Content-Type"]
     max_age_seconds = 3600
   }
+
+  labels = var.tags
 }
 
 resource "google_storage_bucket_object" "public_single_object_content" {
