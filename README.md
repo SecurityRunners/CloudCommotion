@@ -126,43 +126,6 @@ The infrastructure this tool creates to cause commotion is located within `terra
 |---------------------------------|--------------------------------------------------------------------|
 | Public Repository               | Creates a public repository                                        |
 
-
-#### Ideas
-
-- Backdoors
-    - Exposed API Gateway with Administrative Functionality(TODO)
-    - Cross Account ECR Policy with Ability to Overwrite Image(TODO)
-    - Cross Account Lambda Function with Administrative Permissions(TODO)
-    - Exfiltrating Service Snapshots(TODO)
-        - AMI
-        - RDS(TODO)
-        - Redshift(TODO)
-- Exposed Assets
-    - Exposed Unauthenticated Kubernetes API Actions(TODO)
-    - Exposed ECS Cluster(TODO)
-    - S3 CloudFront static site sensitive file(TODO)
-- Exposed Services
-    - Public Elasticsearch/Opensearch(TODO)
-- Misconfigurations
-    - Plaintext Secrets in a variety of locations(TODO)
-        - Instance metadata
-        - Environment variables
-    - Subdomain takeovers
-        - EIP Takeover
-        - Public IP Takeover
-        - S3 Takeover
-        - Third party service takeover
-        - Second order subdomain takeover
-    - GitHub Actions IAM OIDC takeover
-- Destructive
-    - Disable Eventbridge notifications(TODO)
-    - Disable Security Services(TODO)
-    - Ransomware for S3(TODO)
-
-## Usage
-
-Installation/Usage steps go here.
-
 ### Variables
 
 These are vaiables that are used across all the scenarios to account for global namespaces, custom flags to alert the responders, and tags to accomodate for tagging strategies. 
