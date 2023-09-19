@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 
 	"github.com/SecurityRunners/CloudCommotion/pkg/config"
+	"github.com/SecurityRunners/CloudCommotion/pkg/templates"
 	"github.com/SecurityRunners/CloudCommotion/pkg/terraform"
 	"github.com/common-nighthawk/go-figure"
 	"github.com/spf13/cobra"
@@ -44,13 +46,25 @@ var planCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		// Welcome banner
 		fmt.Println(asciiBanner)
-
 		log.Println("Starting commotion planning, prepare for the inveitable!")
+
+		// Check if terraform module directory exists
+		// If not, download the templates
+		terraform_dir := filepath.Join(os.Getenv("HOME"), ".commotion", "terraform")
+		if _, err := os.Stat(terraform_dir); os.IsNotExist(err) {
+			// Define repoURL if not set
+			var repoURL string
+			// Download the terraform templates
+			err := templates.DownloadTerraformTemplates(repoURL, debug)
+			if err != nil {
+				log.Fatal(err)
+			}
+		}
 
 		var tfdir string
 		for _, mod := range config.GetConfig(config_file).Module {
 			// Get the tf module directory
-			tfdir = mod.TerraformDir
+			tfdir = filepath.Join(os.Getenv("HOME"), ".commotion", mod.TerraformDir)
 
 			// Merge config.variables with module.variables
 			tfvars := config.MergeVariables(config.GetConfig(config_file).Variables, mod.Variables)
@@ -83,20 +97,32 @@ var planCmd = &cobra.Command{
 	},
 }
 
-var createCmd = &cobra.Command{
-	Use:   "create",
+var applyCmd = &cobra.Command{
+	Use:   "apply",
 	Short: "Executes individual modules",
 	Long:  "Execute commotion modules located within the terraform directory",
 	Run: func(cmd *cobra.Command, args []string) {
 		// Welcome banner for the application
 		fmt.Println(asciiBanner)
-
 		log.Println("Starting commotion engagement, buckle your seatbelt!")
+
+		// Check if terraform module directory exists
+		// If not, download the templates
+		terraform_dir := filepath.Join(os.Getenv("HOME"), ".commotion", "terraform")
+		if _, err := os.Stat(terraform_dir); os.IsNotExist(err) {
+			// Define repoURL if not set
+			var repoURL string
+			// Download the terraform templates
+			err := templates.DownloadTerraformTemplates(repoURL, debug)
+			if err != nil {
+				log.Fatal(err)
+			}
+		}
 
 		var tfdir string
 		for _, mod := range config.GetConfig(config_file).Module {
 			// Get the tf module directory
-			tfdir = mod.TerraformDir
+			tfdir = filepath.Join(os.Getenv("HOME"), ".commotion", mod.TerraformDir)
 
 			// Merge config.variables with module.variables
 			tfvars := config.MergeVariables(config.GetConfig(config_file).Variables, mod.Variables)
@@ -141,6 +167,22 @@ var createCmd = &cobra.Command{
 	},
 }
 
+var updateCmd = &cobra.Command{
+	Use:  "update",
+	Long: "Update the terraform templates",
+	Run: func(cmd *cobra.Command, args []string) {
+		// Print banner
+		fmt.Println(asciiBanner)
+
+		// Update the terraform templates
+		var repoURL string
+		err := templates.UpdateTerraformTemplates(repoURL, debug)
+		if err != nil {
+			log.Fatal(err)
+		}
+	},
+}
+
 var destroyCmd = &cobra.Command{
 	Use:   "destroy",
 	Short: "Destroy infrastructure created through Cloud Commotion.",
@@ -153,7 +195,7 @@ var destroyCmd = &cobra.Command{
 		var tfdir string
 		for _, mod := range config.GetConfig(config_file).Module {
 			// Get tf module directory
-			tfdir = mod.TerraformDir
+			tfdir = filepath.Join(os.Getenv("HOME"), ".commotion", mod.TerraformDir)
 
 			// Merge variables
 			tfvars := config.MergeVariables(config.GetConfig(config_file).Variables, mod.Variables)
@@ -204,9 +246,9 @@ func init() {
 	rootCmd.Flags().StringVarP(&terraform_dir, "terraform_dir", "t", "", "the scenario in which to run")
 
 	// Variables for create cmd
-	// createCmd.Flags().StringVarP(&resource_name, "resource_name", "a", "", "the name of the resource")
-	// createCmd.Flags().StringVarP(&sensitive_content, "sensitive_content", "c", "", "the flag to be discovered by the incident responder")
-	// createCmd.Flags().StringVarP(&terraform_dir, "terraform_dir", "t", "", "the scenario in which to create")
+	// applyCmd.Flags().StringVarP(&resource_name, "resource_name", "a", "", "the name of the resource")
+	// applyCmd.Flags().StringVarP(&sensitive_content, "sensitive_content", "c", "", "the flag to be discovered by the incident responder")
+	// applyCmd.Flags().StringVarP(&terraform_dir, "terraform_dir", "t", "", "the scenario in which to create")
 }
 
 // Execute executes the root command.
@@ -218,9 +260,10 @@ func Execute() error {
 	})
 
 	rootCmd.HasHelpSubCommands()
-	rootCmd.AddCommand(createCmd)
+	rootCmd.AddCommand(applyCmd)
 	rootCmd.AddCommand(destroyCmd)
 	rootCmd.AddCommand(planCmd)
+	rootCmd.AddCommand(updateCmd)
 
 	return rootCmd.Execute()
 }
