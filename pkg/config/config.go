@@ -2,10 +2,13 @@ package config
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
+	"math/rand"
 	"os"
 	"path/filepath"
+	"time"
 
 	yaml "gopkg.in/yaml.v2"
 )
@@ -20,6 +23,7 @@ type Config struct {
 type Module struct {
 	Name         string                 `yaml:"name"`
 	TerraformDir string                 `yaml:"terraform_dir"`
+	TerraformLoc string                 `yaml:"terraform_loc"`
 	Variables    map[string]interface{} `yaml:"variables"`
 }
 
@@ -112,4 +116,24 @@ func MergeVariables(globalVars map[string]interface{}, moduleVars map[string]int
 	}
 
 	return merged
+}
+
+// Function to return random regions, hard coding regions as using the sdk may not be ideal
+func GetRandomRegion(provider string) (string, error) {
+	rand.Seed(time.Now().UnixNano())
+
+	awsRegions := []string{"us-east-1", "us-west-1", "us-west-2", "eu-west-1", "eu-central-1", "ap-south-1", "ap-northeast-1", "ap-southeast-1", "ap-southeast-2", "sa-east-1"}
+	gcpRegions := []string{"us-central1", "us-west1", "us-east1", "us-east4", "northamerica-northeast1", "southamerica-east1", "europe-west1", "europe-west2", "europe-west3", "europe-west4", "europe-west6", "europe-north1", "asia-south1", "asia-southeast1", "asia-southeast2", "asia-east1", "asia-east2", "asia-northeast1", "asia-northeast2", "asia-northeast3", "australia-southeast1"}
+	azureRegions := []string{"eastus", "eastus2", "southcentralus", "westus2", "westus", "westcentralus", "centralus", "northcentralus", "westeurope", "northeurope", "uksouth", "ukwest", "francecentral", "francesouth", "germanywestcentral", "germanynorth", "switzerlandnorth", "switzerlandwest", "norwayeast", "norwaywest"}
+
+	switch provider {
+	case "aws":
+		return awsRegions[rand.Intn(len(awsRegions))], nil
+	case "gcp":
+		return gcpRegions[rand.Intn(len(gcpRegions))], nil
+	case "azure":
+		return azureRegions[rand.Intn(len(azureRegions))], nil
+	default:
+		return "", errors.New("Unknown provider")
+	}
 }

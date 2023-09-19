@@ -22,6 +22,7 @@ var asciiBanner = fmt.Sprintf("%s\nby Security Runners %s\n", banner, appVersion
 
 // Global flags
 var terraform_dir string
+var terraform_loc string
 var resource_name string
 var sensitive_content string
 var config_file string
@@ -64,7 +65,14 @@ var planCmd = &cobra.Command{
 		var tfdir string
 		for _, mod := range config.GetConfig(config_file).Module {
 			// Get the tf module directory
-			tfdir = filepath.Join(os.Getenv("HOME"), ".commotion", mod.TerraformDir)
+			if mod.TerraformLoc != "" {
+				if mod.TerraformLoc == "local" {
+					tfdir = mod.TerraformDir
+				} else {
+					// Default to remote if not set
+					tfdir = filepath.Join(os.Getenv("HOME"), ".commotion", mod.TerraformDir)
+				}
+			}
 
 			// Merge config.variables with module.variables
 			tfvars := config.MergeVariables(config.GetConfig(config_file).Variables, mod.Variables)
@@ -122,7 +130,14 @@ var applyCmd = &cobra.Command{
 		var tfdir string
 		for _, mod := range config.GetConfig(config_file).Module {
 			// Get the tf module directory
-			tfdir = filepath.Join(os.Getenv("HOME"), ".commotion", mod.TerraformDir)
+			if mod.TerraformLoc != "" {
+				if mod.TerraformLoc == "local" {
+					tfdir = mod.TerraformDir
+				} else {
+					// Default to remote if not set
+					tfdir = filepath.Join(os.Getenv("HOME"), ".commotion", mod.TerraformDir)
+				}
+			}
 
 			// Merge config.variables with module.variables
 			tfvars := config.MergeVariables(config.GetConfig(config_file).Variables, mod.Variables)
@@ -194,8 +209,15 @@ var destroyCmd = &cobra.Command{
 		// Loop through modules and destroy terraform module
 		var tfdir string
 		for _, mod := range config.GetConfig(config_file).Module {
-			// Get tf module directory
-			tfdir = filepath.Join(os.Getenv("HOME"), ".commotion", mod.TerraformDir)
+			// Get the tf module directory
+			if mod.TerraformLoc != "" {
+				if mod.TerraformLoc == "local" {
+					tfdir = mod.TerraformDir
+				} else {
+					// Default to remote if not set
+					tfdir = filepath.Join(os.Getenv("HOME"), ".commotion", mod.TerraformDir)
+				}
+			}
 
 			// Merge variables
 			tfvars := config.MergeVariables(config.GetConfig(config_file).Variables, mod.Variables)
@@ -238,11 +260,22 @@ func init() {
 		}
 	}
 
+	// Based on the value of provider(aws, azure, gcp) if the region is set to random, then set the region to a random region
+	if region == "random" {
+		// Use config.GetRandomRegion() to get a random region and process error
+		randregion, err := config.GetRandomRegion(config.GetConfig(config_file).Provider)
+		if err != nil {
+			log.Fatal(err)
+		}
+		region = randregion
+	}
+
 	// Global variables
 	rootCmd.PersistentFlags().BoolVarP(&debug, "debug", "d", false, "enable debug mode")
 	rootCmd.PersistentFlags().StringVarP(&config_file, "config", "c", "", "the config file to use")
 	rootCmd.PersistentFlags().StringVarP(&sensitive_content, "flag", "f", "", "the flag to be discovered by the incident responder")
 	rootCmd.PersistentFlags().StringVarP(&resource_name, "resource_name", "a", "", "the name of the resource")
+	rootCmd.PersistentFlags().StringVarP(&terraform_loc, "terraform_loc", "l", "", "the location of the terraform binary")
 	rootCmd.Flags().StringVarP(&terraform_dir, "terraform_dir", "t", "", "the scenario in which to run")
 
 	// Variables for create cmd
