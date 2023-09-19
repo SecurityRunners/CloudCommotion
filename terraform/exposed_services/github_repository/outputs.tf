@@ -1,4 +1,4 @@
 output "exposed_asset" {
-  value       = google_something_radom.name.arn
+  value       = github_repository.repo.html_url
   description = "Name of the exposed asset"
 }

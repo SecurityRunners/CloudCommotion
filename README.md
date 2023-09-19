@@ -99,7 +99,7 @@ The infrastructure this tool creates to cause commotion is located within `terra
 <!-- | Public EKS Cluster         | Creates a publicly accessible EKS Cluster                          |
 | Public ECS Cluster         | Creates a publicly accessible ECS Cluster                          | -->
 
-## Google Cloud
+### Google Cloud
 
 #### Exposed Services
 
@@ -108,6 +108,24 @@ The infrastructure this tool creates to cause commotion is located within `terra
 | Public Storage Bucket(Get)      | Creates a public bucket for get operations                         |
 | Public Storage Bucket(Get/List) | Creates a public bucket get and list operations                    |
 | Public S3 Bucket(Get Object)    | Creates a public bucket a single object being public               |
+
+### Azure
+
+#### Exposed Services
+
+| Title                           | Description                                                        |
+|---------------------------------|--------------------------------------------------------------------|
+| Public Storage Blob             | Creates a public blob storage                                      |
+
+
+### GitHub
+
+#### Exposed Services
+
+| Title                           | Description                                                        |
+|---------------------------------|--------------------------------------------------------------------|
+| Public Repository               | Creates a public repository                                        |
+
 
 #### Ideas
 

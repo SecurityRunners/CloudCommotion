@@ -6,13 +6,12 @@ region: us-east-1 # Can select any valid region or `random` to randomize regions
 
 # List of playbooks to run
 module:
-  - name: Exposed SSH Instance
-    terraform_dir: terraform/exposed_assets/aws_ec2/ssh
+  - name: Publicly Accessible GCP Bucket object
+    terraform_loc: local # Can be local or remote
+    terraform_dir: terraform/exposed_services/google_datastore
     variables:
-      vpc_id: vpc-0a7142ba4759c0ef8
-      subnet_id: subnet-0f4cb14acd59dc131
-      allowed_ip: 108.193.64.82/32
-      key_pair: m2
+      region: us-central1
+      project_name: SecurityRunners
 variables:
   resource_name: "securityrunners-images-prod" # Convincing resource name for all resources to be created as
   sensitive_content: "This is a message to provide to incident responders who have appropriately triaged the asset"
