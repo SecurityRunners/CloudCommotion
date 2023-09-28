@@ -4,6 +4,8 @@
 
 You can talk the talk, but can you walk the walk? Cloud Commotion is intended to purposefully cause commotion through vulnerable or concerning infrastructure in order to test your alerting systems or lack thereof. It uses terraform to create fictitious scenarios to assess coverage of your security posture allowing you to create, deploy, and destroy the infrastructure with ease. The only question you will need answering is how long will it take for anyone to notice?
 
+> :warning: **Beta Release**: While the default setup should not be dangerous, use of this tool for certain modules can lead the security of your account at risk. Adult supervision required.
+
 <!-- Commenting CLI Image -->
 <!-- <img src=".assets/cli.png" align="center" style="border:50px solid transparent;"> -->
 
@@ -107,7 +109,7 @@ The infrastructure this tool creates to cause commotion is located within `terra
 |---------------------------------|--------------------------------------------------------------------|
 | Public Storage Bucket(Get)      | Creates a public bucket for get operations                         |
 | Public Storage Bucket(Get/List) | Creates a public bucket get and list operations                    |
-| Public S3 Bucket(Get Object)    | Creates a public bucket a single object being public               |
+| Public Storage Bucket Object    | Creates a public bucket a single object being public               |
 
 ### Azure
 
