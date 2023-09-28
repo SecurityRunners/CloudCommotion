@@ -7,9 +7,6 @@ region: us-east-1 # Can select any valid region or `random` to randomize regions
 # List of playbooks to run
 module:
   - name: Publicly Accessible S3 Bucket(Get)
-    # Defaults to remote terraform module unless local is specified
-    # https://github.com/SecurityRunners/CloudCommotion/tree/main/terraform
-    # terraform_loc: local
     terraform_dir: terraform/exposed_services/aws_s3/public_get
   - name: Publicly Accessible S3 Bucket(Get/List)
     terraform_dir: terraform/exposed_services/aws_s3/public_list_get

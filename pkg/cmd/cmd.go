@@ -65,13 +65,11 @@ var planCmd = &cobra.Command{
 		var tfdir string
 		for _, mod := range config.GetConfig(config_file).Module {
 			// Get the tf module directory
-			if mod.TerraformLoc != "" {
-				if mod.TerraformLoc == "local" {
-					tfdir = mod.TerraformDir
-				} else {
-					// Default to remote if not set
-					tfdir = filepath.Join(os.Getenv("HOME"), ".commotion", mod.TerraformDir)
-				}
+			if mod.TerraformLoc == "local" {
+				tfdir = mod.TerraformDir
+			} else {
+				// Default to remote if not set
+				tfdir = filepath.Join(os.Getenv("HOME"), ".commotion", mod.TerraformDir)
 			}
 
 			// Merge config.variables with module.variables
@@ -131,13 +129,11 @@ var applyCmd = &cobra.Command{
 		var tfdir string
 		for _, mod := range config.GetConfig(config_file).Module {
 			// Get the tf module directory
-			if mod.TerraformLoc != "" {
-				if mod.TerraformLoc == "local" {
-					tfdir = mod.TerraformDir
-				} else {
-					// Default to remote if not set
-					tfdir = filepath.Join(os.Getenv("HOME"), ".commotion", mod.TerraformDir)
-				}
+			if mod.TerraformLoc == "local" {
+				tfdir = mod.TerraformDir
+			} else {
+				// Default to remote if not set
+				tfdir = filepath.Join(os.Getenv("HOME"), ".commotion", mod.TerraformDir)
 			}
 
 			// Merge config.variables with module.variables
@@ -154,6 +150,7 @@ var applyCmd = &cobra.Command{
 			if debug {
 				log.Println("Terraform variables: " + fmt.Sprintf("%v", tfvars))
 				log.Println("Terraform directory: " + tfdir)
+				log.Println("Terraform mod:" + mod.TerraformDir)
 			}
 
 			// Plan the infrastructure to be created
@@ -212,15 +209,12 @@ var destroyCmd = &cobra.Command{
 		var tfdir string
 		for _, mod := range config.GetConfig(config_file).Module {
 			// Get the tf module directory
-			if mod.TerraformLoc != "" {
-				if mod.TerraformLoc == "local" {
-					tfdir = mod.TerraformDir
-				} else {
-					// Default to remote if not set
-					tfdir = filepath.Join(os.Getenv("HOME"), ".commotion", mod.TerraformDir)
-				}
+			if mod.TerraformLoc == "local" {
+				tfdir = mod.TerraformDir
+			} else {
+				// Default to remote if not set
+				tfdir = filepath.Join(os.Getenv("HOME"), ".commotion", mod.TerraformDir)
 			}
-
 			// Merge variables
 			tfvars := config.MergeVariables(config.GetConfig(config_file).Variables, mod.Variables)
 
