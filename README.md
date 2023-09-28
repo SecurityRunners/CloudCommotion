@@ -19,6 +19,12 @@ CloudCommotion apply
 CloudCommotion destroy
 ```
 
+### Tips
+
+- Run `CloudCommotion update` before apply to customize your config
+- Update config values for `resource_name`, `tags`, and `sensitive` content for a more realistic scenario
+- Run `CloudCommotion plan` to ensure everything is in working order
+
 ## Purpose
 
 There is no shortage of breaches as it relates to misconfigured, vulnerable, and overly permissive infrastructure within cloud environments. Cloud Commotion simulates what occurs frequently within the industry to help better prepare you for incidents. We frequently improve on our monitoring systems while seldomly testing the effectiveness and coverage of those systems. This tool intends to create vulnerable, misconfigured, and overly permissive services for a wide variety of scenarios to identify gaps, alerting system for coverage, alert preparedness, and how your team would respond in the event of an incident.
