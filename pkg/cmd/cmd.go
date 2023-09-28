@@ -16,7 +16,7 @@ import (
 
 // ASCII Banner
 var appName = "Cloud Commotion"
-var appVersion = "v0.0.1"
+var appVersion = "v0.0.2"
 var banner = figure.NewFigure("Cloud Commotion", "larry3d", true).String()
 var asciiBanner = fmt.Sprintf("%s\nby Security Runners %s\n", banner, appVersion)
 
