@@ -9,6 +9,16 @@ You can talk the talk, but can you walk the walk? Cloud Commotion is intended to
 <!-- Commenting CLI Image -->
 <!-- <img src=".assets/cli.png" align="center" style="border:50px solid transparent;"> -->
 
+## Usage
+
+To get started, all you need to do is install CloudCommotion and run apply. This will download the terraform modules in `~/.commotion/terraform`, download the default configuration on first run in `~/.commotion/config.yml`, and apply the default configuration commotion infrastructure. 
+
+```
+go install github.com/SecurityRunners/CloudCommotion@latest
+CloudCommotion apply
+CloudCommotion destroy
+```
+
 ## Purpose
 
 There is no shortage of breaches as it relates to misconfigured, vulnerable, and overly permissive infrastructure within cloud environments. Cloud Commotion simulates what occurs frequently within the industry to help better prepare you for incidents. We frequently improve on our monitoring systems while seldomly testing the effectiveness and coverage of those systems. This tool intends to create vulnerable, misconfigured, and overly permissive services for a wide variety of scenarios to identify gaps, alerting system for coverage, alert preparedness, and how your team would respond in the event of an incident.
