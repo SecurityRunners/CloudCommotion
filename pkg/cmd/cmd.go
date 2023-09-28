@@ -87,6 +87,7 @@ var planCmd = &cobra.Command{
 			// If debug flag in args is set, print the terraform variables
 			if debug {
 				log.Println("Terraform variables: " + fmt.Sprintf("%v", tfvars))
+				log.Println("Terraform directory: " + tfdir)
 			}
 
 			// Plan the infrastructure to be created
@@ -152,6 +153,7 @@ var applyCmd = &cobra.Command{
 			// If debug flag in args is set, print the terraform variables
 			if debug {
 				log.Println("Terraform variables: " + fmt.Sprintf("%v", tfvars))
+				log.Println("Terraform directory: " + tfdir)
 			}
 
 			// Plan the infrastructure to be created
@@ -232,6 +234,7 @@ var destroyCmd = &cobra.Command{
 			// If debug flag in args is set, print the terraform variables
 			if debug {
 				log.Println("Terraform variables: " + fmt.Sprintf("%v", tfvars))
+				log.Println("Terraform directory: " + tfdir)
 			}
 
 			// Destroy the infrastructure
