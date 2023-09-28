@@ -14,10 +14,6 @@ module:
     terraform_dir: terraform/exposed_services/aws_lambda/endpoint
   - name: Public ECR Gallery
     terraform_dir: terraform/exposed_services/aws_ecr/aws_ecr_public_gallery
-  - name: Exposed SSH
-    terraform_dir: terraform/exposed_assets/aws_ec2/ssh
-  - name: Github IAM Role OIDC Takeover
-    terraform_dir: terraform/misconfigurations/aws_iam_role/oidc
   - name: S3 Bucket Takeover
     terraform_dir: terraform/misconfigurations/takeovers/aws_s3_takeover
     variables:
