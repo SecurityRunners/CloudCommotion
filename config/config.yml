@@ -8,10 +8,6 @@ region: us-east-1 # Can select any valid region or `random` to randomize regions
 module:
   - name: Publicly Accessible S3 Bucket(Get)
     terraform_dir: terraform/exposed_services/aws_s3/public_get
-  - name: Publicly Accessible S3 Bucket(Get/List)
-    terraform_dir: terraform/exposed_services/aws_s3/public_list_get
-  - name: Publicly Writable S3 Bucket(Put)
-    terraform_dir: terraform/exposed_services/aws_s3/public_write
   - name: Public SQS Queue
     terraform_dir: terraform/exposed_services/aws_sqs
   - name: Public Lambda Endpoint
@@ -24,6 +20,8 @@ module:
     terraform_dir: terraform/misconfigurations/aws_iam_role/oidc
   - name: S3 Bucket Takeover
     terraform_dir: terraform/misconfigurations/takeovers/aws_s3_takeover
+    variables:
+      resource_name: "securityrunners-images" # S3 bucket names must be globally unique
 variables:
   resource_name: "securityrunners-images-prod" # Convincing resource name for all resources to be created as
   sensitive_content: "This is a message to provide to incident responders who have appropriately triaged the asset"
