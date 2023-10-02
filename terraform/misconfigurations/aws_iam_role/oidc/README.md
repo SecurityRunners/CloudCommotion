@@ -1,6 +1,6 @@
-# OIDC Misconfiguration
+# Github Actions OIDC Misconfiguration
 
-This module creates a GitHub OIDC connector with AWS that is misconfigured to allow any GitHub action to assume it.
+This module creates a GitHub OIDC connector with AWS that is misconfigured to allow any GitHub action to assume it. This research has recently emerged by [Tinder Security Labs](https://medium.com/tinder/identifying-vulnerabilities-in-github-actions-aws-oidc-configurations-8067c400d5b8) in which major organizations were impacted through a simple misconfiguration.
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
