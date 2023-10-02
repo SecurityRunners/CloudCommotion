@@ -1,6 +1,10 @@
 # Github Actions OIDC Misconfiguration
 
-This module creates a GitHub OIDC connector with AWS that is misconfigured to allow any GitHub action to assume it. This research has recently emerged by [Tinder Security Labs](https://medium.com/tinder/identifying-vulnerabilities-in-github-actions-aws-oidc-configurations-8067c400d5b8) in which major organizations were impacted through a simple misconfiguration.
+This module creates a GitHub OIDC connector with AWS that is misconfigured to allow any GitHub action to assume it. Tooling [gh-workflow-auditor](https://github.com/TinderSec/gh-workflow-auditor) allows attackers and blue teams to assess exploitability.
+
+## Research
+
+This research has recently emerged by [Tinder Security Labs](https://medium.com/tinder/identifying-vulnerabilities-in-github-actions-aws-oidc-configurations-8067c400d5b8) in which major organizations were impacted allowing attackers to assume the role.
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
