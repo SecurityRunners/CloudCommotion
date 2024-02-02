@@ -25,6 +25,8 @@ resource "aws_instance" "opensearch" {
   vpc_security_group_ids = [aws_security_group.opensearch.id]
   iam_instance_profile = aws_iam_instance_profile.ssm_profile.name # ssm session manager debugging
 
+  associate_public_ip_address = true
+
   tags = var.tags
 
   user_data = <<-EOF
