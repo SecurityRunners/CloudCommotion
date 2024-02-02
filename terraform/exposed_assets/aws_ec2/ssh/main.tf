@@ -21,6 +21,8 @@ resource "aws_instance" "ssh" {
   instance_type = var.instance_type
   subnet_id     = element(local.public_subnets, 0)
   key_name      = var.key_pair
+  
+  associate_public_ip_address = true
 
   security_groups      = [aws_security_group.ssh.id]
   iam_instance_profile = aws_iam_instance_profile.ssm_profile.name
