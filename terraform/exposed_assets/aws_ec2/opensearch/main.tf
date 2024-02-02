@@ -22,7 +22,7 @@ resource "aws_instance" "opensearch" {
   subnet_id     = element(local.public_subnets, 0)
   key_name      = var.key_pair
 
-  security_groups      = [aws_security_group.opensearch.id]
+  vpc_security_group_ids = [aws_security_group.opensearch.id]
   iam_instance_profile = aws_iam_instance_profile.ssm_profile.name # ssm session manager debugging
 
   tags = var.tags
