@@ -6,20 +6,11 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 )
 
-var repoURL string
-
-// DownloadTerraformTemplates downloads Terraform templates from a remote GitHub repository.
-func DownloadTerraformTemplates(repoURL string, debug bool) error {
-	// Define repoURL if not set
-	if repoURL == "" {
-		repoURL = "git@github.com:SecurityRunners/CloudCommotion.git"
-	}
-
-	// Define the target directory where Terraform templates will be stored
-	targetDir := filepath.Join(os.Getenv("HOME"), ".commotion")
-
+// Download Terraform templates from a remote GitHub repository in to commotion root.
+func DownloadTerraformTemplates(targetDir string, repoURL string, debug bool) error {
 	// Check if the target directory already exists; if not, create it
 	if _, err := os.Stat(targetDir); os.IsNotExist(err) {
 		err := os.MkdirAll(targetDir, 0755)
@@ -49,14 +40,14 @@ func DownloadTerraformTemplates(repoURL string, debug bool) error {
 	return nil
 }
 
-// UpdateTerraformTemplates updates Terraform templates in the target directory.
-func UpdateTerraformTemplates(repoURL string, debug bool) error {
-	// Define the target directory where Terraform templates are stored
-	targetDir := filepath.Join(os.Getenv("HOME"), ".commotion")
-
+// Run git pull within commotion root to download new Terraform templates.
+//
+// This function will implicitly run DownloadTerraformTemplates() if the
+// commotion root directory does not exist.
+func UpdateTerraformTemplates(targetDir string, repoURL string, debug bool) error {
 	// Check if the target directory exists
 	if _, err := os.Stat(targetDir); os.IsNotExist(err) {
-		DownloadTerraformTemplates("", debug)
+		DownloadTerraformTemplates(targetDir, repoURL, debug)
 
 		return nil
 	}
@@ -71,7 +62,7 @@ func UpdateTerraformTemplates(repoURL string, debug bool) error {
 
 	// Debug logging
 	if debug {
-		log.Println("Running command: " + fmt.Sprintf("%v", cmd.Args))
+		log.Printf("Running command %s in %s.\n", strings.Join(cmd.Args, " "), targetDir)
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 	}
