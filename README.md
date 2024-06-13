@@ -4,7 +4,7 @@
 
 You can talk the talk, but can you walk the walk? Cloud Commotion is intended to purposefully cause commotion through vulnerable or concerning infrastructure in order to test your alerting systems or lack thereof. It uses terraform to create fictitious scenarios to assess coverage of your security posture allowing you to create, deploy, and destroy the infrastructure with ease. The only question you will need answering is how long will it take for anyone to notice?
 
-> :warning: **Beta Release**: While the default setup should not be dangerous, use of this tool for certain modules can lead the security of your account at risk. Adult supervision required.
+> :warning: **Beta Release**: While the default setup should not be dangerous, use of this tool for certain modules can lead the security of your account at risk. Adult supervision required.c
 
 <!-- Commenting CLI Image -->
 <!-- <img src=".assets/cli.png" align="center" style="border:50px solid transparent;"> -->
