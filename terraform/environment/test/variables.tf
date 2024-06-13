@@ -13,3 +13,11 @@ variable "region" {
   description = "The AWS region to create resources in"
   type        = string
 }
+
+variable "tags" {
+  description = "Organization tagging strategy but should keep Creator tag for discovery later."
+  type        = map(string)
+  default = {
+    "Creator" = "CloudCommotion"
+  }
+}
