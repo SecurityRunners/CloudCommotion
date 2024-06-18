@@ -4,37 +4,21 @@ provider: aws # Does not impact anything at this time but should in the future
 #profile: prod-operations-user # AWS profile list maybe
 region: us-east-1 # Can select any valid region or `random` to randomize regions
 
-# List of playbooks to run
+# List of exercises to run
 module:
+  # This is for the VPC creation for exposed_assets to be created if you need a VPC 
   # - name: VPC Creation
   #   terraform_dir: terraform/environment/vpc
-  - name: Publicly EC2 SSH
-    terraform_dir: terraform/exposed_assets/aws_ec2/ssh
-    variables:
-      vpc_id: vpc-0a0bd90178091c2db
-      key_pair: securityrunners
-  - name: Public EC2 Jenkins
-    terraform_dir: terraform/exposed_assets/aws_ec2/jenkins
-    variables:
-      resource_name: securityrunners-jenkins
-      vpc_id: vpc-0a0bd90178091c2db
-      key_pair: securityrunners
-  - name: Public Opensearch Endpoint ALB
-    terraform_dir: terraform/exposed_assets/aws_ec2_alb/opensearch
-    variables:
-      resource_name: securityrunners-opensearch
-      vpc_id: vpc-0a0bd90178091c2db
-      key_pair: securityrunners
-  - name: Public Opensearch CLB
-    terraform_dir: terraform/exposed_assets/aws_ec2_clb/opensearch
-    variables:
-      resource_name: securityrunners-opensearch-clb
-      vpc_id: vpc-0a0bd90178091c2db
-      key_pair: securityrunners
+  - name: Publicly Accessible S3 Bucket(Get)
+    terraform_dir: terraform/exposed_services/aws_s3/public_get
+  - name: Public Lambda Endpoint
+    terraform_dir: terraform/exposed_services/aws_lambda/endpoint
+  - name: Public ECR Gallery
+    terraform_dir: terraform/exposed_services/aws_ecr/aws_ecr_public_gallery
 variables:
-  resource_name: "securityrunners-public" # Convincing resource name for all resources to be created as
+  resource_name: "securityrunners-static-website" # Convincing resource name for all resources to be created as
   sensitive_content: "This is a message to provide to incident responders who have appropriately triaged the asset"
   tags:
-    Name: "securityrunners-images-prod"
+    Name: "securityrunners-static-website"
     Owner: "Operations"
     Project: "CloudCommotion"
