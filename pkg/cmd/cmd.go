@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"path/filepath"
 
 	"github.com/SecurityRunners/CloudCommotion/pkg/config"
 	"github.com/SecurityRunners/CloudCommotion/pkg/templates"
@@ -47,6 +46,16 @@ func (r *RuntimeFlags) terraformDirExists() bool {
 	}
 }
 
+// Get the terraform region as specified from the CLI, otherwise default to
+// the region specified in the config file.
+func (r *RuntimeFlags) terraformRegion() string {
+	if r.region != "" {
+		return r.region
+	} else {
+		return GetConfig().Region
+	}
+}
+
 var runtimeFlags = RuntimeFlags{}
 
 // Retrieve a configuration instance from pkg/config/config.go
@@ -76,15 +85,18 @@ func printAsciiBanner() {
 	fmt.Println(asciiBanner)
 }
 
-// Get the absolute path to the root commotion directory.
-func getCommotionDirectory() string {
-	return filepath.Join(os.Getenv("HOME"), ".commotion")
-}
+// Download Terraform templates if the directory does not exist
+func ensureTerraformDirExists() {
+	if runtimeFlags.terraformDirExists() {
+		return
+	}
 
-// Returns the absolute path to ``name`` relative to the default commotion
-// install directory.
-func getRelativeToCommotionDirectory(name string) string {
-	return filepath.Join(os.Getenv("HOME"), ".commotion", name)
+	commotionRoot := config.GetCommotionDirectory()
+
+	err := templates.DownloadTerraformTemplates(commotionRoot, runtimeFlags.repoURL, runtimeFlags.debug)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 // The implementation for ./CloudCommotion
@@ -108,40 +120,21 @@ func planCmdRun(cmd *cobra.Command, args []string) {
 
 	log.Println("Starting commotion planning, prepare for the inevitable!")
 
-	// Download Terraform templates if the directory does not exist
-	if ! runtimeFlags.terraformDirExists() {
-		commotionRoot := getCommotionDirectory()
+	ensureTerraformDirExists()
 
-		err := templates.DownloadTerraformTemplates(commotionRoot, runtimeFlags.repoURL, runtimeFlags.debug)
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
+	cfg := GetConfig()
 
-	var tfdir string
-	for _, mod := range GetConfig().Module {
-		// Get the tf module directory
-		if mod.TerraformLoc == "local" {
-			tfdir = mod.TerraformDir
-		} else {
-			// Default to remote if not set
-			tfdir = getRelativeToCommotionDirectory(mod.TerraformDir)
-		}
+	for _, mod := range cfg.Module {
+		tfdir := mod.TfDir()
 
-		// Merge config.variables with module.variables
-		tfvars := config.MergeVariables(GetConfig().Variables, mod.Variables)
+		// Merge config.variables, module.variables, and configured region
+		tfvars := config.MergeVariables(cfg.Variables, mod.Variables)
+		tfvars["region"] = runtimeFlags.terraformRegion()
 
-		// If region flag is set, use that region
-		if runtimeFlags.region != "" {
-			tfvars["region"] = runtimeFlags.region
-		} else {
-			tfvars["region"] = GetConfig().Region
-		}
-
-		// If debug flag in args is set, print the Terraform variables
 		if runtimeFlags.debug {
 			log.Printf("Terraform variables: %v\n", tfvars)
 			log.Printf("Terraform directory: %s\n", tfdir)
+			log.Printf("Terraform mod: %s\n", mod.TerraformDir)
 		}
 
 		// Plan the infrastructure to be created
@@ -172,41 +165,21 @@ func applyCmdRun(cmd *cobra.Command, args []string) {
 
 	log.Println("Starting commotion engagement, buckle your seatbelt!")
 
-	// Download Terraform templates if we haven't already
-	if ! runtimeFlags.terraformDirExists() {
-		commotionRoot := getCommotionDirectory()
+	ensureTerraformDirExists()
 
-		err := templates.DownloadTerraformTemplates(commotionRoot, runtimeFlags.repoURL, runtimeFlags.debug)
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
+	cfg := GetConfig()
 
-	var tfdir string
-	for _, mod := range GetConfig().Module {
-		// Get the tf module directory
-		if mod.TerraformLoc == "local" {
-			tfdir = mod.TerraformDir
-		} else {
-			// Default to remote if not set
-			tfdir = getRelativeToCommotionDirectory(mod.TerraformDir)
-		}
+	for _, mod := range cfg.Module {
+		tfdir := mod.TfDir()
 
-		// Merge config.variables with module.variables
-		tfvars := config.MergeVariables(GetConfig().Variables, mod.Variables)
+		// Merge config.variables, module.variables, and configured region
+		tfvars := config.MergeVariables(cfg.Variables, mod.Variables)
+		tfvars["region"] = runtimeFlags.terraformRegion()
 
-		// If region flag is set, use that region
-		if runtimeFlags.region != "" {
-			tfvars["region"] = runtimeFlags.region
-		} else {
-			tfvars["region"] = GetConfig().Region
-		}
-
-		// If debug flag in args is set, print the Terraform variables
 		if runtimeFlags.debug {
 			log.Printf("Terraform variables: %v\n", tfvars)
-			log.Println("Terraform directory: " + tfdir)
-			log.Println("Terraform mod:" + mod.TerraformDir)
+			log.Printf("Terraform directory: %s\n", tfdir)
+			log.Printf("Terraform mod: %s\n", mod.TerraformDir)
 		}
 
 		// Plan the infrastructure to be created
@@ -248,7 +221,7 @@ func updateCmdRun(cmd *cobra.Command, args []string) {
 	printAsciiBanner()
 
 	// Update the Terraform templates
-	commotionRoot := getCommotionDirectory()
+	commotionRoot := config.GetCommotionDirectory()
 
 	err := templates.UpdateTerraformTemplates(commotionRoot, runtimeFlags.repoURL, runtimeFlags.debug)
 	if err != nil {
@@ -267,31 +240,20 @@ var updateCmd = &cobra.Command{
 func destroyCmdRun(cmd *cobra.Command, args []string) {
 	printAsciiBanner()
 
+	cfg := GetConfig()
+
 	// Loop through modules and destroy Terraform module
-	var tfdir string
-	for _, mod := range GetConfig().Module {
-		// Get the tf module directory
-		if mod.TerraformLoc == "local" {
-			tfdir = mod.TerraformDir
-		} else {
-			// Default to remote if not set
-			tfdir = getRelativeToCommotionDirectory(mod.TerraformDir)
-		}
+	for _, mod := range cfg.Module {
+		tfdir := mod.TfDir()
 
-		// Merge variables
-		tfvars := config.MergeVariables(GetConfig().Variables, mod.Variables)
+		// Merge config.variables, module.variables, and configured region
+		tfvars := config.MergeVariables(cfg.Variables, mod.Variables)
+		tfvars["region"] = runtimeFlags.terraformRegion()
 
-		// If region flag is set, use that region
-		if runtimeFlags.region != "" {
-			tfvars["region"] = runtimeFlags.region
-		} else {
-			tfvars["region"] = GetConfig().Region
-		}
-
-		// If debug flag in args is set, print the Terraform variables
 		if runtimeFlags.debug {
 			log.Printf("Terraform variables: %v\n", tfvars)
-			log.Println("Terraform directory: " + tfdir)
+			log.Printf("Terraform directory: %s\n", tfdir)
+			log.Printf("Terraform mod: %s\n", mod.TerraformDir)
 		}
 
 		// Destroy the infrastructure
@@ -338,7 +300,7 @@ func init() {
 
 	// Always ensure a terraform directory is set
 	if runtimeFlags.terraformDir == "" {
-		runtimeFlags.terraformDir = getRelativeToCommotionDirectory("terraform")
+		runtimeFlags.terraformDir = config.GetRelativeToCommotionDirectory("terraform")
 	}
 
 	var defaultGitUrl = "git@github.com:SecurityRunners/CloudCommotion.git"

@@ -87,58 +87,59 @@ func CleanupTerraformTemplatesDirectory(targetDir string, debug bool) error {
 		return fmt.Errorf("failed to read directory: %v", err)
 	}
 
-	// Initialize a flag to track if config.yml was moved
-	configMoved := false
-
 	// Remove all files and directories except "terraform"
 	for _, entry := range entries {
-		if entry.Name() != "terraform" {
-			// Preserve the config file
-			if entry.Name() == "config" || entry.Name() == "config.yml" {
-				configSourcePath := filepath.Join(targetDir, "config", "config.yml")
-				configDestPath := filepath.Join(targetDir, "config.yml")
+		if entry.Name() == "terraform" {
+			continue
+		}
 
-				if entry.Name() == "config" {
-					if err := os.Rename(configSourcePath, configDestPath); err != nil {
-						log.Printf("failed to move config.yml: %v", err)
-					} else {
-						if debug {
-							log.Println("config.yml has been moved to the target directory.")
-						}
-					}
+		// Preserve the .git directory
+		if entry.Name() == ".git" {
+			continue
+		}
 
-					// remove the config directory
-					err := os.RemoveAll(filepath.Join(targetDir, "config"))
-					if err != nil {
-						log.Printf("failed to remove directory %s: %v", filepath.Join(targetDir, "config"), err)
-					}
-				}
+		// Preserve the config file
+		if entry.Name() == "config.yml" {
+			continue
+		}
 
-				continue
+		// Pull the config file from the config directory, then remove the config directory
+		if entry.Name() == "config" {
+			configSourcePath := filepath.Join(targetDir, "config", "config.yml")
+			configDestPath := filepath.Join(targetDir, "config.yml")
+
+			if err := os.Rename(configSourcePath, configDestPath); err != nil {
+				log.Printf("failed to move config.yml: %v", err)
+			} else if debug {
+				log.Printf("config.yml has been moved to %s.", configDestPath)
 			}
 
-			// Preserve the .git directory
-			if entry.Name() == ".git" {
-				continue
+			// remove the config directory
+			err := os.RemoveAll(filepath.Join(targetDir, "config"))
+			if err != nil {
+				log.Printf("failed to remove directory %s: %v", filepath.Join(targetDir, "config"), err)
 			}
 
-			entryPath := filepath.Join(targetDir, entry.Name())
-			if entry.IsDir() {
-				err := os.RemoveAll(entryPath)
-				if debug {
-					log.Println("Removing directory: " + entryPath)
-				}
-				if err != nil {
-					log.Printf("failed to remove directory %s: %v", entryPath, err)
-				}
-			} else {
-				err := os.Remove(entryPath)
-				if debug {
-					log.Println("Removing file: " + entryPath)
-				}
-				if err != nil {
-					log.Printf("failed to remove file %s: %v", entryPath, err)
-				}
+			continue
+		}
+
+		// Remove everything else
+		entryPath := filepath.Join(targetDir, entry.Name())
+		if entry.IsDir() {
+			err := os.RemoveAll(entryPath)
+			if debug {
+				log.Println("Removing directory: " + entryPath)
+			}
+			if err != nil {
+				log.Printf("failed to remove directory %s: %v", entryPath, err)
+			}
+		} else {
+			err := os.Remove(entryPath)
+			if debug {
+				log.Println("Removing file: " + entryPath)
+			}
+			if err != nil {
+				log.Printf("failed to remove file %s: %v", entryPath, err)
 			}
 		}
 	}
@@ -150,13 +151,7 @@ func CleanupTerraformTemplatesDirectory(targetDir string, debug bool) error {
 	if _, err := os.Stat(configSourcePath); err == nil {
 		if err := os.Rename(configSourcePath, configDestPath); err != nil {
 			log.Printf("failed to move config.yml: %v", err)
-		} else {
-			configMoved = true
-		}
-	}
-
-	if configMoved {
-		if debug {
+		} else if debug {
 			log.Println("config.yml has been moved to the target directory.")
 		}
 	}
