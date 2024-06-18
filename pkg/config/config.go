@@ -27,6 +27,27 @@ type Module struct {
 	Variables    map[string]interface{} `yaml:"variables"`
 }
 
+// Get the absolute path to the root commotion directory.
+func GetCommotionDirectory() string {
+	return filepath.Join(os.Getenv("HOME"), ".commotion")
+}
+
+// Returns the absolute path to ``name`` relative to the default commotion
+// install directory.
+func GetRelativeToCommotionDirectory(name string) string {
+	return filepath.Join(os.Getenv("HOME"), ".commotion", name)
+}
+
+// Get the tf module directory
+func (mod Module) TfDir() string {
+	if mod.TerraformLoc == "local" {
+		return mod.TerraformDir
+	} else {
+		// Default to remote if not set
+		return GetRelativeToCommotionDirectory(mod.TerraformDir)
+	}
+}
+
 func GetConfig(configfile string) *Config {
 	var configFilePath string
 
